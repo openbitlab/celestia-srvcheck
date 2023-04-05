@@ -49,7 +49,7 @@ class TaskCelestiaDasCheckSamplesHeight(Task):
 
 			if self.oc > 1:
 				elapsed = elapsedToString(self.since)
-				self.notify (f'is back sampling new headers ({elapsed} {Emoji.SyncOk}')
+				self.notify (f'is back sampling new headers (after {elapsed}) {Emoji.SyncOk}')
 
 			self.since = time.time()
 			self.oc = 0
