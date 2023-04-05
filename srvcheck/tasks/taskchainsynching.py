@@ -12,7 +12,9 @@ class TaskChainSynching(Task):
 		return True
 
 	def run(self):
-		if self.s.chain.isSynching():
+		if self.s.chain.isSynching() and self.s.chain.TYPE == 'Validator node':
 			return self.notify(f'chain is synching {Emoji.Slow}')
+		elif self.s.chain.isSynching():
+			return self.notify(f'is synching data availability samples {Emoji.Slow}')
 
 		return False

@@ -31,11 +31,11 @@ class TaskCelestiaDasCheckSamplesHeight(Task):
 
 	@staticmethod
 	def isPluggable(services):
-		return True
+		return services.chain.ROLE == 'light' or services.chain.ROLE == 'full'
 
 	def run(self):
 		if not self.s.chain.isSynching():
-			bh = int(self.s.chain.getHeight())
+			bh = int(self.s.chain.getNetworkHeight())
 			bhSampled = self.s.chain.getSamplesHeight()
 
 			if self.since is None:
@@ -54,6 +54,38 @@ class TaskCelestiaDasCheckSamplesHeight(Task):
 			self.since = time.time()
 			self.oc = 0
 		return False
+	
+class TaskNodeIsSynching(Task):
+	def __init__(self, services):
+		super().__init__('TaskNodeIsSynching', services, minutes(5), minutes(5))
+		self.prev = None
+		self.since = None
+		self.oc = 0
+
+	@staticmethod
+	def isPluggable(services):
+		return True
+
+	def run(self):
+		bh = int(self.s.chain.getHeight())
+
+		if self.prev is None:
+			self.prev = bh
+			self.since = time.time()
+			return False
+
+		if bh > self.prev and bh < int(self.s.chain.getNetworkHeight()):
+			self.oc += 1
+			return self.notify(f'chain is synching {Emoji.Slow}')
+
+		if self.oc > 1:
+			elapsed = elapsedToString(self.since)
+			self.notify (f'chain synched in {elapsed} {Emoji.SyncOk}')
+
+		self.prev = bh
+		self.since = time.time()
+		self.oc = 0
+		return False
 
 class CelestiaDas(Chain):
 	TYPE = ""
@@ -63,7 +95,7 @@ class CelestiaDas(Chain):
 	AUTH_TOKEN = None
 	BIN = None
 	EP = "http://localhost:26658/"
-	CUSTOM_TASKS = [TaskCelestiaDasHealthError, TaskCelestiaDasCheckSamplesHeight]
+	CUSTOM_TASKS = [TaskCelestiaDasHealthError, TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching]
 
 	def __init__(self, conf):
 		super().__init__(conf)
@@ -107,6 +139,9 @@ class CelestiaDas(Chain):
 			return ver
 
 	def getHeight(self):
+		return self.rpcCall('header.LocalHead')['header']['height']
+	
+	def getNetworkHeight(self):
 		return self.rpcCall('header.NetworkHead')['header']['height']
 
 	def getBlockHash(self):
