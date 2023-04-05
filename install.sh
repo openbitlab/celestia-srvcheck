@@ -37,7 +37,7 @@ install_monitor () {
     systemctl stop node-monitor.service
     rm -rf /etc/srvcheck.conf
     rm -rf /etc/systemd/system/node-monitor.service
-    pip3 $verbosity install git+https://github.com/openbitlab/celestia-srvcheck.git@$branch#egg=srvcheck-celestia --exists-action w --ignore-installed 
+    pip3 $verbosity install git+https://github.com/openbitlab/celestia-srvcheck.git@$branch#egg=celestia-srvcheck --exists-action w --ignore-installed 
     wget $verbosity https://raw.githubusercontent.com/openbitlab/celestia-srvcheck/$branch/conf/srvcheck.conf -O $config_file ## TODO add args to change service name
     sed -i -e "s/^apiToken =.*/apiToken = \"$api_token\"/" $config_file
     sed -i -e "s/^chatIds =.*/chatIds = [\"$chat_id\"]/" $config_file
