@@ -174,7 +174,7 @@ class TaskCelestiaBridgeNotRunningError(Task):
 			return self.notify(f'Bridge node is not running! {Emoji.NoLeader}')
 
 class Celestia (Chain):
-	TYPE = "celestia"
+	TYPE = "Validator node"
 	NAME = ""
 	BLOCKTIME = 60
 	EP = "http://localhost:26657/"

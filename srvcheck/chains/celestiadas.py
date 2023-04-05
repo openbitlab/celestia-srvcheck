@@ -56,7 +56,7 @@ class TaskCelestiaDasCheckSamplesHeight(Task):
 		return False
 
 class CelestiaDas(Chain):
-	TYPE = "das"
+	TYPE = ""
 	ROLE = "light"
 	NAME = ""
 	BLOCKTIME = 60
@@ -74,6 +74,7 @@ class CelestiaDas(Chain):
 			cmd = re.split(' ', c["Service"]["ExecStart"])
 			self.BIN = cmd[0]
 			self.ROLE = cmd[1]
+			self.TYPE = self.ROLE.capitalize() + " node"
 
 	@staticmethod
 	def detect(conf):

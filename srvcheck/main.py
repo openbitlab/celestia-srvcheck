@@ -113,7 +113,7 @@ def main():
 		print ("No chain detected")
 		sys.exit (0)
 
-	notification.send(f"monitor v{version} started {Emoji.Start}\nDetected chain: {chain.TYPE}\nEnabled tasks: {reduce(lambda x, y: x + ', ' + y, [x.name for x in tasks])}")
+	notification.send(f"monitor v{version} started {Emoji.Start}\nDetected Celestia: {chain.TYPE}\nEnabled tasks: {reduce(lambda x, y: x + ', ' + y, [x.name for x in tasks])}")
 
 	# Mainloop
 	TTS = 60
