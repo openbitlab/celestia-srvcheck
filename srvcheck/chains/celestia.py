@@ -1,7 +1,6 @@
 import json
 import configparser
 import re
-
 from srvcheck.chains.celestiadas import CelestiaDas
 from ..notification import Emoji
 from .chain import Chain
