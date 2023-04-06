@@ -60,15 +60,29 @@ install --help
  -b  --block-time <time> expected block time [default is 60 seconds]
      --branch <name> name of the branch to use for the installation [default is main]
      --endpoint <url:port> node local rpc address
-     --git <git_api> git api to query the latest realease version installed
+     --git <git_repo> git repo to query the latest realease version installed
      --gov enable checks on new governance proposals
      --mount <mount_point> mount point where the node saves data
  -n  --name <name> monitor name [default is the server hostname]
-     --rel <version> release version installed (required if git_api is specified)
+     --rel <version> release version installed (required if git_repo is specified)
      --signed-blocks <max_misses> <blocks_window> max number of blocks not signed in a specified blocks window [default is 5 blocks missed out of the latest 100 blocks]
  -s  --service <name> service name of the node to monitor [required]
  -t  --telegram <chat_id> <token> telegram chat options (id and token) where the alerts will be sent [required]
  -v  --verbose enable verbose installation
+```
+
+#### A few examples of the installation with optional flags:
+
+Install with `--git` flag to get alerts on new release of the node (in this case [celstia-node](https://github.com/celestiaorg/celestia-node))
+
+```bash 
+curl -s https://raw.githubusercontent.com/openbitlab/celestia-srvcheck/main/install.sh | bash -s -- -t <tg_chat_id> <tg_token> -s <service_name> --git celestiaorg/celestia-node
+```
+
+Install with `--admin` and `--gov` flags to get alerts on new proposals and get tagged
+
+```bash 
+curl -s https://raw.githubusercontent.com/openbitlab/celestia-srvcheck/main/install.sh | bash -s -- -t <tg_chat_id> <tg_token> -s <service_name> --admin @MyTelegramUsername --gov
 ```
 
 ## Results
