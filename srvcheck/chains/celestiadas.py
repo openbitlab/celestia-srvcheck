@@ -7,22 +7,6 @@ from ..notification import Emoji
 from ..tasks import Task,  hours, minutes
 from ..tasks.taskchainstuck import elapsedToString
 
-class TaskCelestiaDasHealthError(Task):
-	def __init__(self, services, checkEvery = minutes(5), notifyEvery=hours(1)):
-		super().__init__('TaskCelestiaDasHealthError', services, checkEvery, notifyEvery)
-		self.prev = None
-
-	@staticmethod
-	def isPluggable(services):
-		return True
-
-	def run(self):
-		try:
-			self.s.chain.getNetwork()
-			return False
-		except Exception as _:
-			return self.notify(f'health error! {Emoji.Health}')
-
 class TaskCelestiaDasCheckSamplesHeight(Task):
 	def __init__(self, services, checkEvery = minutes(5), notifyEvery=minutes(5)):
 		super().__init__('TaskCelestiaDasCheckSamplesHeight', services, checkEvery, notifyEvery)	
@@ -96,7 +80,7 @@ class CelestiaDas(Chain):
 	AUTH_TOKEN = None
 	BIN = None
 	EP = "http://localhost:26658/"
-	CUSTOM_TASKS = [TaskCelestiaDasHealthError, TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching]
+	CUSTOM_TASKS = [TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching]
 
 	def __init__(self, conf):
 		super().__init__(conf)

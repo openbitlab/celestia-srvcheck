@@ -140,22 +140,6 @@ class TaskCelestiaPositionChanged(Task):
 			active_vals += self.s.chain.rpcCall('validators', [bh, "1", str(active_s)])['validators']
 		p = [i for i, j in enumerate(active_vals) if j['address'] == self.s.chain.getValidatorAddress()]
 		return p[0] + 1 if len(p) > 0 else -1
-
-class TaskCelestiaHealthError(Task):
-	def __init__(self, services, checkEvery = minutes(5), notifyEvery=hours(1)):
-		super().__init__('TaskCelestiaHealthError', services, checkEvery, notifyEvery)
-		self.prev = None
-
-	@staticmethod
-	def isPluggable(services):
-		return True
-
-	def run(self):
-		try:
-			self.s.chain.getHealth()
-			return False
-		except Exception as _:
-			return self.notify(f'health error! {Emoji.Health}')
 		
 class TaskCelestiaBridgeNotRunningError(Task):
 	def __init__(self, services, checkEvery = minutes(5), notifyEvery=hours(1)):
@@ -178,7 +162,7 @@ class Celestia (Chain):
 	NAME = ""
 	BLOCKTIME = 60
 	EP = "http://localhost:26657/"
-	CUSTOM_TASKS = [TaskCelestiaBlockMissed, TaskCelestiaPositionChanged, TaskCelestiaHealthError, TaskCelestiaNewProposal, TaskCelestiaBridgeNotRunningError]
+	CUSTOM_TASKS = [TaskCelestiaBlockMissed, TaskCelestiaPositionChanged, TaskCelestiaNewProposal, TaskCelestiaBridgeNotRunningError]
 
 	@staticmethod
 	def detect(conf):
