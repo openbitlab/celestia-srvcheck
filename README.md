@@ -73,9 +73,19 @@ install --help
 
 ## Results
 
+#### For example this is the output that is sent in the chat when the monitor is installed and detects a Celestia node
 
+<img width=50% src="https://user-images.githubusercontent.com/49374667/230424648-11471db6-25fc-4cde-83c8-60778681b915.jpg" />
 
-## Configuration
+#### This is the output that is sent in the chat when the monitor is installed and every day
+
+<img width=50% src="https://user-images.githubusercontent.com/49374667/230424699-42fdb043-e2d8-4a20-8e08-399d03893b9d.jpg" />
+
+#### These are the charts that give a better overview of the system usage during the last month (or since the node has been is installed)
+
+<img width=75% src="https://user-images.githubusercontent.com/49374667/230424743-45776691-0442-46b2-a1db-ac9260b1f68d.jpg" />
+
+## Customize Configuration
 Edit /etc/srvcheck.conf:
 
 ```
