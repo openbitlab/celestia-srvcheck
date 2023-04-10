@@ -31,7 +31,7 @@ class TaskCelestiaDasCheckSamplesHeight(Task):
 				elapsed = elapsedToString(self.since)
 				return self.notify(f'is not sampling new headers, last block sampled is {bhSampled}, current block header is {bh} ({elapsed}) {Emoji.Stuck}')
 
-			if self.oc > 1:
+			if self.oc > 0:
 				elapsed = elapsedToString(self.since)
 				self.notify (f'is back sampling new headers (after {elapsed}) {Emoji.SyncOk}')
 
@@ -63,7 +63,7 @@ class TaskNodeIsSynching(Task):
 			self.oc += 1
 			return self.notify(f'chain is synching, last block stored is {bh}, current network height is {nh} {Emoji.Slow}')
 
-		if self.oc > 1:
+		if self.oc > 0:
 			elapsed = elapsedToString(self.since)
 			self.notify (f'chain synched in {elapsed} {Emoji.SyncOk}')
 
@@ -111,7 +111,7 @@ class CelestiaDas(Chain):
 		return self.rpcCall('header.NetworkHead')["header"]["chain_id"]
 
 	def getVersion(self):
-		ver = Bash(f"{self.BIN} version | head -n 1").value().split(" ")
+		ver = Bash(f"{self.BIN} version | head -n 1").value()
 		return ver.split(" ")[-1]
 
 	def getLocalVersion(self):
