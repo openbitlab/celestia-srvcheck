@@ -94,11 +94,10 @@ class CelestiaDas(Chain):
 	BIN = None
 	EP = "http://localhost:26658/"
 	CUSTOM_TASKS = [TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching, TaskExporter]
-	peer_metric = None
+	peer_metric = Gauge('peers_count', "Number of connected peers")
 	def __init__(self, conf):
 		super().__init__(conf)
 		serv = self.conf.getOrDefault('chain.service')
-		self.peer_metric = Gauge('peers_count', "Number of connected peers")
 		if serv:
 			c = configparser.ConfigParser()
 			c.read(f"/etc/systemd/system/{serv}")
