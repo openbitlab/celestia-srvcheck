@@ -1,5 +1,6 @@
 import requests
 from ..utils import ConfItem, ConfSet
+from prometheus_client import start_http_server, Gauge, REGISTRY
 
 ConfSet.addItem(ConfItem('chain.endpoint', None, str, 'api endpoint'))
 ConfSet.addItem(ConfItem('chain.blockTime', 10, int, 'block time in seconds'))
@@ -19,9 +20,12 @@ class Chain:
 	NAME = ""
 	BLOCKTIME = 10
 	EP = ""
+	peer_metric = None
 
 	def __init__(self, conf):
 		self.conf = conf
+		self.peer_metric = Gauge('peers_count', "Number of connected peers")
+		start_http_server(9001)
 		if self.conf.getOrDefault('chain.endpoint') is not None:
 			self.EP = self.conf.getOrDefault('chain.endpoint')
 		self.NAME = self.conf.getOrDefault('chain.name')

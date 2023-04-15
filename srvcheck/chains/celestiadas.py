@@ -38,6 +38,18 @@ class TaskCelestiaDasCheckSamplesHeight(Task):
 			self.since = time.time()
 			self.oc = 0
 		return False
+
+class TaskExporter(Task):
+	def __init__(self, services, checkEvery = minutes(1), notifyEvery=minutes(1)):
+		super().__init__('TaskExporter', services, checkEvery, notifyEvery)
+
+	@staticmethod
+	def isPluggable(services):
+		return services.chain.ROLE == 'light' or services.chain.ROLE == 'full'
+
+	def run(self):
+		self.s.chain.peer_metric.set(self.s.chain.getPeerCount())
+		return False
 	
 class TaskNodeIsSynching(Task):
 	def __init__(self, services):
@@ -80,7 +92,7 @@ class CelestiaDas(Chain):
 	AUTH_TOKEN = None
 	BIN = None
 	EP = "http://localhost:26658/"
-	CUSTOM_TASKS = [TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching]
+	CUSTOM_TASKS = [TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching, TaskExporter]
 
 	def __init__(self, conf):
 		super().__init__(conf)
