@@ -93,7 +93,7 @@ class CelestiaDas(Chain):
 	AUTH_TOKEN = None
 	BIN = None
 	EP = "http://localhost:26658/"
-	CUSTOM_TASKS = [TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching, TaskExporter]
+	CUSTOM_TASKS = [TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching]
 
 	def __init__(self, conf):
 		super().__init__(conf)
