@@ -67,7 +67,7 @@ def main():
 	cf = args.config
 
 	peer_metric = Gauge('peers_count', "Number of connected peers")
-	#start_http_server(9001)
+	start_http_server(9001)
 
 	# Parse configuration
 	confRaw = configparser.ConfigParser()
