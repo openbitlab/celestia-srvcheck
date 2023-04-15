@@ -49,7 +49,7 @@ class TaskExporter(Task):
 		return services.chain.ROLE == 'light' or services.chain.ROLE == 'full'
 
 	def run(self):
-		self.s.chain.metric_peer.set(self.s.chain.getPeerCount())
+		self.s.chain.peer_metric.set(self.s.chain.getPeerCount())
 
 
 class TaskNodeIsSynching(Task):
