@@ -22,5 +22,5 @@ setup(name='celestia-srvcheck',
 		],
 	},
     zip_safe=False,
-	install_requires=['requests', 'packaging==21.3', 'python-dateutil', 'matplotlib'],
+	install_requires=['requests', 'packaging==21.3', 'python-dateutil', 'matplotlib', 'prometheus-client'],
 )
