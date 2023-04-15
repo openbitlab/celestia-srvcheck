@@ -13,6 +13,7 @@ from .chains import CHAINS
 from .notification import NOTIFICATION_SERVICES, Emoji, Notification
 from .tasks import TASKS
 from .utils import ConfItem, ConfSet, System, Persistent
+from prometheus_client import start_http_server, Gauge, REGISTRY
 
 if sys.version_info[0] < 3:
 	print ('python2 not supported, please use python3')
@@ -65,6 +66,9 @@ def main():
 	args = parser.parse_args()
 	cf = args.config
 
+	peer_metric = Gauge('peers_count', "Number of connected peers")
+	start_http_server(9001)
+
 	# Parse configuration
 	confRaw = configparser.ConfigParser()
 	confRaw.optionxform=str
@@ -94,7 +98,7 @@ def main():
 	tasks = []
 	for x in CHAINS:
 		if conf.getOrDefault('chain.type') == x.TYPE:
-			chain = x(conf)
+			chain = x(conf, peer_metric)
 			services = Services(conf, notification, system, chain, persistent)
 			tasks = addTasks(services)
 			break
@@ -102,8 +106,8 @@ def main():
 	if not chain:
 		for x in CHAINS:
 			if x.detect(conf):
-				chain = x(conf)
-				print ("Detected chain", chain.TYPE)
+				chain = x(conf, peer_metric)
+				print("Detected chain", chain.TYPE)
 				services = Services(conf, notification, system, chain, persistent)
 				tasks = addTasks(services)
 				print(tasks)
