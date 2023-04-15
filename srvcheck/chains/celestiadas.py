@@ -38,7 +38,7 @@ class TaskCelestiaDasCheckSamplesHeight(Task):
 			self.since = time.time()
 			self.oc = 0
 		return False
-
+"""
 class TaskExporter(Task):
 	def __init__(self, services, checkEvery = minutes(1), notifyEvery=minutes(1)):
 		super().__init__('TaskExporter', services, checkEvery, notifyEvery)
@@ -50,7 +50,8 @@ class TaskExporter(Task):
 	def run(self):
 		self.s.chain.metric.set(self.s.chain.getPeerCount())
 		return False
-	
+"""
+
 class TaskNodeIsSynching(Task):
 	def __init__(self, services):
 		super().__init__('TaskNodeIsSynching', services, minutes(5), minutes(5))

@@ -20,12 +20,9 @@ class Chain:
 	NAME = ""
 	BLOCKTIME = 10
 	EP = ""
-	peer_metric = None
 
 	def __init__(self, conf):
 		self.conf = conf
-		self.peer_metric = Gauge('peers_count', "Number of connected peers")
-		start_http_server(9001)
 		if self.conf.getOrDefault('chain.endpoint') is not None:
 			self.EP = self.conf.getOrDefault('chain.endpoint')
 		self.NAME = self.conf.getOrDefault('chain.name')
