@@ -6,6 +6,7 @@ from ..utils import Bash
 from ..notification import Emoji
 from ..tasks import Task,  hours, minutes
 from ..tasks.taskchainstuck import elapsedToString
+from prometheus_client import Gauge
 
 class TaskCelestiaDasCheckSamplesHeight(Task):
 	def __init__(self, services, checkEvery = minutes(5), notifyEvery=minutes(5)):
@@ -38,7 +39,7 @@ class TaskCelestiaDasCheckSamplesHeight(Task):
 			self.since = time.time()
 			self.oc = 0
 		return False
-"""
+
 class TaskExporter(Task):
 	def __init__(self, services, checkEvery = minutes(1), notifyEvery=minutes(1)):
 		super().__init__('TaskExporter', services, checkEvery, notifyEvery)
@@ -49,8 +50,7 @@ class TaskExporter(Task):
 
 	def run(self):
 		self.s.chain.metric.set(self.s.chain.getPeerCount())
-		return False
-"""
+
 
 class TaskNodeIsSynching(Task):
 	def __init__(self, services):
@@ -93,11 +93,12 @@ class CelestiaDas(Chain):
 	AUTH_TOKEN = None
 	BIN = None
 	EP = "http://localhost:26658/"
-	CUSTOM_TASKS = [TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching]
-
+	CUSTOM_TASKS = [TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching, TaskExporter]
+	peer_metric = None
 	def __init__(self, conf):
 		super().__init__(conf)
 		serv = self.conf.getOrDefault('chain.service')
+		self.peer_metric = Gauge('peers_count', "Number of connected peers")
 		if serv:
 			c = configparser.ConfigParser()
 			c.read(f"/etc/systemd/system/{serv}")

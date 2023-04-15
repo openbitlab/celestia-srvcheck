@@ -13,7 +13,7 @@ from .chains import CHAINS
 from .notification import NOTIFICATION_SERVICES, Emoji, Notification
 from .tasks import TASKS
 from .utils import ConfItem, ConfSet, System, Persistent
-from prometheus_client import start_http_server, Gauge, REGISTRY
+from prometheus_client import start_http_server
 
 if sys.version_info[0] < 3:
 	print ('python2 not supported, please use python3')
@@ -66,7 +66,6 @@ def main():
 	args = parser.parse_args()
 	cf = args.config
 
-	peer_metric = Gauge('peers_count', "Number of connected peers")
 	start_http_server(9001)
 
 	# Parse configuration

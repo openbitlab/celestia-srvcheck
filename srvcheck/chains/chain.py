@@ -1,6 +1,5 @@
 import requests
 from ..utils import ConfItem, ConfSet
-from prometheus_client import start_http_server, Gauge, REGISTRY
 
 ConfSet.addItem(ConfItem('chain.endpoint', None, str, 'api endpoint'))
 ConfSet.addItem(ConfItem('chain.blockTime', 10, int, 'block time in seconds'))
