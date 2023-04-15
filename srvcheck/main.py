@@ -98,7 +98,7 @@ def main():
 	tasks = []
 	for x in CHAINS:
 		if conf.getOrDefault('chain.type') == x.TYPE:
-			chain = x(conf, peer_metric)
+			chain = x(conf)
 			services = Services(conf, notification, system, chain, persistent)
 			tasks = addTasks(services)
 			break
@@ -106,7 +106,7 @@ def main():
 	if not chain:
 		for x in CHAINS:
 			if x.detect(conf):
-				chain = x(conf, peer_metric)
+				chain = x(conf)
 				print("Detected chain", chain.TYPE)
 				services = Services(conf, notification, system, chain, persistent)
 				tasks = addTasks(services)
