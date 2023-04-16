@@ -2,7 +2,7 @@ import time
 import configparser
 import re
 from .chain import Chain
-from ..utils import Bash
+from ..utils import Bash, Exporter
 from ..notification import Emoji
 from ..tasks import Task,  hours, minutes
 from ..tasks.taskchainstuck import elapsedToString
@@ -41,15 +41,19 @@ class TaskCelestiaDasCheckSamplesHeight(Task):
 		return False
 
 class TaskExporter(Task):
+	exporter: Exporter
 	def __init__(self, services, checkEvery = minutes(1), notifyEvery=minutes(1)):
 		super().__init__('TaskExporter', services, checkEvery, notifyEvery)
+		metrics = {Gauge('peers_count', "Number of connected peers"): self.s.chain.getPeerCount}
+		self.exporter = Exporter(9001, metrics)
 
 	@staticmethod
 	def isPluggable(services):
 		return services.chain.ROLE == 'light' or services.chain.ROLE == 'full'
 
 	def run(self):
-		self.s.chain.peer_metric.set(self.s.chain.getPeerCount())
+		#self.s.chain.peer_metric.set(self.s.chain.getPeerCount())
+		self.exporter.export()
 
 
 class TaskNodeIsSynching(Task):
@@ -94,7 +98,8 @@ class CelestiaDas(Chain):
 	BIN = None
 	EP = "http://localhost:26658/"
 	CUSTOM_TASKS = [TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching, TaskExporter]
-	peer_metric = Gauge('peers_count', "Number of connected peers")
+	#peer_metric = Gauge('peers_count', "Number of connected peers")
+
 	def __init__(self, conf):
 		super().__init__(conf)
 		serv = self.conf.getOrDefault('chain.service')

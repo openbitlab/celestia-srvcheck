@@ -66,7 +66,7 @@ def main():
 	args = parser.parse_args()
 	cf = args.config
 
-	start_http_server(9001)
+	#start_http_server(9001)
 
 	# Parse configuration
 	confRaw = configparser.ConfigParser()
