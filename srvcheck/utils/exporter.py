@@ -11,4 +11,7 @@ class Exporter:
 
     def export(self):
         for m, v in self.metrics.items():
-            m.set(v())
+            if type(m) is Gauge:
+                m.set(v())
+            elif type(m) is Counter:
+                m.inc(int(v()))
