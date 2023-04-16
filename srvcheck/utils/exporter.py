@@ -6,7 +6,7 @@ class Exporter:
     metrics = None
 
     def __init__(self, metrics: dict, port):
-        start_http_server(port)
+        #start_http_server(port)
         self.metrics = metrics
 
     def export(self):

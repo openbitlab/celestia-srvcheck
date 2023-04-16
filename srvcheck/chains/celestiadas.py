@@ -6,7 +6,7 @@ from ..utils import Bash, Exporter
 from ..notification import Emoji
 from ..tasks import Task,  hours, minutes
 from ..tasks.taskchainstuck import elapsedToString
-from prometheus_client import Gauge
+from prometheus_client import Gauge, start_http_server
 
 class TaskCelestiaDasCheckSamplesHeight(Task):
 	def __init__(self, services, checkEvery = minutes(5), notifyEvery=minutes(5)):
@@ -46,6 +46,7 @@ class TaskExporter(Task):
 		super().__init__('TaskExporter', services, checkEvery, notifyEvery)
 		metrics = {Gauge('peers_count', "Number of connected peers"): self.s.chain.getPeerCount}
 		self.exporter = Exporter(9001, metrics)
+		start_http_server(9001)
 
 	@staticmethod
 	def isPluggable(services):
