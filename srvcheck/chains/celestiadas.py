@@ -45,8 +45,7 @@ class TaskExporter(Task):
 	def __init__(self, services, checkEvery = minutes(1), notifyEvery=minutes(1)):
 		super().__init__('TaskExporter', services, checkEvery, notifyEvery)
 		metrics = {Gauge('peers_count', "Number of connected peers"): self.s.chain.getPeerCount}
-		self.exporter = Exporter(9001, metrics)
-		start_http_server(9001)
+		self.exporter = Exporter(metrics, 9001)
 
 	@staticmethod
 	def isPluggable(services):
