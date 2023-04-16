@@ -237,14 +237,8 @@ case $1 in
         shift # past value
     ;;
     --exporter)
-        if [[ -z $2 ]]
-        then
-            print_help
-            exit 1
-        else
-          enable_exporter=true
-	        exporter_port="$2"
-        fi
+        enable_exporter=true
+	      exporter_port="$2"
         shift # past argument
         shift # past value
     ;;
