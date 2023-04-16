@@ -27,6 +27,7 @@ And offer tasks for checking:
 Celestia Light and Full node specific tasks:
 - **TaskNodeIsSynching** (checks if the node is synching blocks)
 - **TaskCelestiaDasCheckSamplesHeight** (check if the node is sampling new headers)
+- **TaskExporter** (export node metrics on prometheus)
 
 Celestia Validator node specific tasks:
 - **TaskCelestiaBlockMissed** (checks if the validator is missing blocks)
@@ -69,6 +70,7 @@ install --help
  -s  --service <name> service name of the node to monitor [required]
  -t  --telegram <chat_id> <token> telegram chat options (id and token) where the alerts will be sent [required]
  -v  --verbose enable verbose installation
+ -e  --exporter <port> Enable prometheus exporter on <port> (port optional, default 9001)"
 ```
 
 #### A few examples of the installation with optional flags:
@@ -143,6 +145,8 @@ disabled = TaskTendermintNewProposal
 autoRecover = true 
 ; Governance administrator (proposal voting, with @), optional
 govAdmin =
+; Prometheus exporter port
+exporterPort =
 ```
 
 ## Credits
