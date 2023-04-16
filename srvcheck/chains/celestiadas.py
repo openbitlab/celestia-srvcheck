@@ -52,7 +52,7 @@ class TaskExporter(Task):
                    Gauge('node_height', "Node height"): self.s.chain.getHeight,
                    Gauge('network_height', "Network height"): self.s.chain.getNetworkHeight,
                    Counter('out_of_sync_counter', "How many times node has gone out of sync"): self.s.chain.isSynching}
-        self.exporter = Exporter(metrics, self.conf.getOrDefault('tasks.exporterPort'))
+        self.exporter = Exporter(metrics, self.s.chain.conf.getOrDefault('tasks.exporterPort'))
 
     @staticmethod
     def isPluggable(services):
