@@ -3,7 +3,7 @@ from typing import Any
 
 
 class Exporter:
-    metrics: dict[object, callable[..., Any]]
+    metrics = None
 
     def __init__(self, metrics: dict[object, callable[..., Any]], port: int):
         start_http_server(port)
