@@ -13,7 +13,6 @@ from .chains import CHAINS
 from .notification import NOTIFICATION_SERVICES, Emoji, Notification
 from .tasks import TASKS
 from .utils import ConfItem, ConfSet, System, Persistent
-from prometheus_client import start_http_server
 
 if sys.version_info[0] < 3:
 	print ('python2 not supported, please use python3')
@@ -32,7 +31,7 @@ ConfSet.addItem(ConfItem('tasks.autoRecover', False, bool, 'enable auto recovera
 ConfSet.addItem(ConfItem('tasks.disabled', '', str, 'comma separated list of disabled tasks'))
 ConfSet.addItem(ConfItem('chain.service', None, str, 'node service name'))
 ConfSet.addItem(ConfItem('tasks.govAdmin', None, str, 'Proposal voter nickname'))
-
+ConfSet.addItem(ConfItem('tasks.exporterPort', 9001, int, 'Prometheus exporter port'))
 
 def addTasks(services):
 	# Create the list of tasks
@@ -65,8 +64,6 @@ def main():
 	parser.add_argument('--config', type=str, default=cf, help='srvcheck config file')
 	args = parser.parse_args()
 	cf = args.config
-
-	#start_http_server(9001)
 
 	# Parse configuration
 	confRaw = configparser.ConfigParser()

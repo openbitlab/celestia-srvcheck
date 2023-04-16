@@ -81,6 +81,11 @@ install_monitor () {
     then
         sed -i -r 's/(.TaskTendermintNewProposal?;|.TaskTendermintNewProposal?;?$)//' $config_file #enable checks on tendermint governance module
     fi
+    if [ "$enable_exporter" = true ]
+    then
+        sed -i -r 's/(.TaskExporter?;|.TaskExporter?;?$)//' $config_file #enable exporter
+        sed -i -e "s/^exporterPort =.*/exporterPort = $exporter_port/" $config_file
+    fi
 }
 
 install_service () {
@@ -94,7 +99,7 @@ install_service () {
 POSITIONAL_ARGS=()
 
 enable_gov=false
-
+enable_exporter=false
 while [[ $# -gt 0 ]]; do
 case $1 in
     -n|--name)
@@ -227,6 +232,18 @@ case $1 in
             exit 1
         else
 	        endpoint="$2"
+        fi
+        shift # past argument
+        shift # past value
+    ;;
+    --exporter)
+        if [[ -z $2 ]]
+        then
+            print_help
+            exit 1
+        else
+          enable_exporter=true
+	        exporter_port="$2"
         fi
         shift # past argument
         shift # past value

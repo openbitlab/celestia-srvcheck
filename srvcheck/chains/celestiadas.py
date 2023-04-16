@@ -52,7 +52,7 @@ class TaskExporter(Task):
                    Gauge('node_height', "Node height"): self.s.chain.getHeight,
                    Gauge('network_height', "Network height"): self.s.chain.getNetworkHeight,
                    Counter('out_of_sync_counter', "How many times node has gone out of sync"): self.s.chain.isSynching}
-        self.exporter = Exporter(metrics, 9001)
+        self.exporter = Exporter(metrics, self.conf.getOrDefault('tasks.exporterPort'))
 
     @staticmethod
     def isPluggable(services):
@@ -107,8 +107,6 @@ class CelestiaDas(Chain):
     BIN = None
     EP = "http://localhost:26658/"
     CUSTOM_TASKS = [TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching, TaskExporter]
-
-    # peer_metric = Gauge('peers_count', "Number of connected peers")
 
     def __init__(self, conf):
         super().__init__(conf)
