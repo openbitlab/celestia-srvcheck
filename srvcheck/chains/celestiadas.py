@@ -82,7 +82,7 @@ class TaskNodeIsSynching(Task):
 
 		if self.oc > 0:
 			elapsed = elapsedToString(self.since)
-			self.notify (f'chain synched in {elapsed} {Emoji.SyncOk}')
+			self.notify(f'chain synched in {elapsed} {Emoji.SyncOk}')
 
 		self.prev = bh
 		self.since = time.time()
