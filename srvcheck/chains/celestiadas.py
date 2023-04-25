@@ -177,7 +177,7 @@ class CelestiaDas(Chain):
         serv = self.conf.getOrDefault('chain.service')
         if serv:
             reg = '\\{\\\"from.*}'
-            blocks = Bash(f'journalctl -u {serv} --no-pager --since "1 min ago" |   grep -Eo'+reg).value().split("\n")
+            blocks = Bash(f'journalctl -u {serv} --no-pager --since "1 min ago" |   grep -Eo'+reg).value()
             print(blocks)
             #blocks = [int(b) for b in blocks if b != '']
             self.LATEST_SAMPLED_HEADERS = json.loads(blocks[-1])
