@@ -7,6 +7,7 @@ from ..notification import Emoji
 from ..tasks import Task, hours, minutes, seconds
 from ..tasks.taskchainstuck import elapsedToString
 from prometheus_client import Gauge, Counter
+import json
 
 
 class TaskCelestiaDasCheckSamplesHeight(Task):
@@ -51,7 +52,10 @@ class TaskExporter(Task):
         metrics = {Gauge('peers_count', "Number of connected peers"): self.s.chain.getPeerCount,
                    Gauge('node_height', "Node height"): self.s.chain.getHeight,
                    Gauge('network_height', "Network height"): self.s.chain.getNetworkHeight,
-                   Counter('out_of_sync_counter', "How many times node has gone out of sync"): self.s.chain.isSynching}
+                   Counter('out_of_sync_counter', "How many times node has gone out of sync"): self.s.chain.isSynching,
+                   Gauge('first_header', "First sampled header height"): self.s.chain.getFirstHeader,
+                   Gauge('latest_header', "First sampled header height"): self.s.chain.getLatestHeader,
+                   Gauge('finished_s', "Processing time of block range"): self.s.chain.getProcessingTime}
         self.exporter = Exporter(metrics, self.s.chain.conf.getOrDefault('tasks.exporterPort'))
 
     @staticmethod
@@ -60,6 +64,7 @@ class TaskExporter(Task):
 
     def run(self):
         # self.s.chain.peer_metric.set(self.s.chain.getPeerCount())
+        self.s.chain.getSampledHeader()
         self.exporter.export()
 
 
@@ -107,6 +112,7 @@ class CelestiaDas(Chain):
     BIN = None
     EP = "http://localhost:26658/"
     CUSTOM_TASKS = [TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching, TaskExporter]
+    LATEST_SAMPLED_HEADERS = {}
 
     def __init__(self, conf):
         super().__init__(conf)
@@ -166,3 +172,21 @@ class CelestiaDas(Chain):
 
     def getSamplesHeight(self):
         return self.rpcCall('das.SamplingStats')['head_of_sampled_chain']
+
+    def getSampledHeader(self):
+        serv = self.conf.getOrDefault('chain.service')
+        if serv:
+            reg = r"""'\\{\\\"from.*}'""";
+            blocks = Bash(f'journalctl -u {serv} --no-pager --since "1 min ago" |   grep -Eo'+reg).value().split("\n")
+            blocks = [int(b) for b in blocks if b != '']
+            self.LATEST_SAMPLED_HEADERS= json.loads(blocks[-1])
+        self.LATEST_SAMPLED_HEADERS = []
+
+    def getFirstHeader(self):
+        return self.LATEST_SAMPLED_HEADERS["from"]
+
+    def getLatestHeader(self):
+        return self.LATEST_SAMPLED_HEADERS["to"]
+
+    def getProcessingTime(self):
+        return self.LATEST_SAMPLED_HEADERS["finished (s)"]
