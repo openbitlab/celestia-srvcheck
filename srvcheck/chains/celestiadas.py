@@ -180,6 +180,7 @@ class CelestiaDas(Chain):
             print(blocks[-1])
             #blocks = [int(b) for b in blocks if b != '']
             self.LATEST_SAMPLED_HEADERS = json.loads(re.findall("\{\"from.*}", blocks[-1])[-1])
+            print(self.LATEST_SAMPLED_HEADERS)
         self.LATEST_SAMPLED_HEADERS = []
 
     def getFirstHeader(self):
