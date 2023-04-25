@@ -55,7 +55,8 @@ class TaskExporter(Task):
                    Counter('out_of_sync_counter', "How many times node has gone out of sync"): self.s.chain.isSynching,
                    Gauge('first_header', "First sampled header height"): self.s.chain.getFirstHeader,
                    Gauge('latest_header', "First sampled header height"): self.s.chain.getLatestHeader,
-                   Gauge('finished_s', "Processing time of block range"): self.s.chain.getProcessingTime}
+                   Gauge('finished_s', "Processing time of block range"): self.s.chain.getProcessingTime,
+                   Gauge('errors', "Header sampling errors"): self.s.chain.getErrors}
         self.exporter = Exporter(metrics, self.s.chain.conf.getOrDefault('tasks.exporterPort'))
 
     @staticmethod
@@ -178,7 +179,6 @@ class CelestiaDas(Chain):
         if serv:
             blocks = Bash(f'journalctl -u {serv} --no-pager --since "1 min ago"').value().split("\n")
             self.LATEST_SAMPLED_HEADERS = json.loads(re.findall("\{\"from.*}", blocks[-1])[-1])
-            print(self.LATEST_SAMPLED_HEADERS)
         else:
             self.LATEST_SAMPLED_HEADERS = []
 
@@ -190,3 +190,6 @@ class CelestiaDas(Chain):
 
     def getProcessingTime(self):
         return self.LATEST_SAMPLED_HEADERS["finished (s)"]
+
+    def getErrors(self):
+        return self.LATEST_SAMPLED_HEADERS["errors"]
