@@ -176,7 +176,7 @@ class CelestiaDas(Chain):
     def getSampledHeader(self):
         serv = self.conf.getOrDefault('chain.service')
         if serv:
-            reg = r"""'\\{\\\"from.*}'""";
+            reg = '\\{\\\"from.*}'
             blocks = Bash(f'journalctl -u {serv} --no-pager --since "1 min ago" |   grep -Eo'+reg).value().split("\n")
             print(blocks)
             #blocks = [int(b) for b in blocks if b != '']
