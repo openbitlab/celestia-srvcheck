@@ -169,10 +169,23 @@ class CelestiaDas(Chain):
         return len(self.rpcCall('p2p.Peers'))
 
     def isSynching(self):
-        return not self.rpcCall('das.SamplingStats')['catch_up_done']
+        # RPC call return inconsistent data (different from logs)                
+        serv = self.conf.getOrDefault('chain.service')
+        if serv:
+            synching = Bash(f'journalctl -u {serv} --no-pager --since "1 min ago"').value().split("\n")
+            synchingBlocks =  [b for b in synching if "finished syncing headers" in b]
+        return not self.rpcCall('das.SamplingStats')['catch_up_done'] or len(synchingBlocks) > 0
 
     def getSamplesHeight(self):
-        return self.rpcCall('das.SamplingStats')['head_of_sampled_chain']
+        # RPC call return inconsistent data (different from logs)
+        serv = self.conf.getOrDefault('chain.service')
+        lastSampledHeadRpc = self.rpcCall('das.SamplingStats')['head_of_sampled_chain']
+        if serv:
+            blocks = Bash(f'journalctl -u {serv} --no-pager --since "1 min ago"').value().split("\n")
+            lastSampledHead = json.loads(re.findall("\{\"from.*}", [b for b in blocks if "finished sampling headers" in b][-1])[-1])["to"]
+            if lastSampledHead > lastSampledHeadRpc:
+                return lastSampledHead
+        return lastSampledHeadRpc
 
     def getLastSampledHeader(self):
         serv = self.conf.getOrDefault('chain.service')
