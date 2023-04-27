@@ -65,7 +65,7 @@ class TaskExporter(Task):
 
     def run(self):
         # self.s.chain.peer_metric.set(self.s.chain.getPeerCount())
-        self.s.chain.getSampledHeader()
+        self.s.chain.getLastSampledHeader()
         self.exporter.export()
 
 
@@ -174,11 +174,11 @@ class CelestiaDas(Chain):
     def getSamplesHeight(self):
         return self.rpcCall('das.SamplingStats')['head_of_sampled_chain']
 
-    def getSampledHeader(self):
+    def getLastSampledHeader(self):
         serv = self.conf.getOrDefault('chain.service')
         if serv:
             blocks = Bash(f'journalctl -u {serv} --no-pager --since "1 min ago"').value().split("\n")
-            self.LATEST_SAMPLED_HEADERS = json.loads(re.findall("\{\"from.*}", blocks[-1])[-1])
+            self.LATEST_SAMPLED_HEADERS = json.loads(re.findall("\{\"from.*}", [b for b in blocks if "finished sampling headers" in b][-1])[-1])
         else:
             self.LATEST_SAMPLED_HEADERS = []
 
