@@ -31,7 +31,7 @@ ConfSet.addItem(ConfItem('tasks.autoRecover', False, bool, 'enable auto recovera
 ConfSet.addItem(ConfItem('tasks.disabled', '', str, 'comma separated list of disabled tasks'))
 ConfSet.addItem(ConfItem('chain.service', None, str, 'node service name'))
 ConfSet.addItem(ConfItem('tasks.govAdmin', None, str, 'Proposal voter nickname'))
-
+ConfSet.addItem(ConfItem('tasks.exporterPort', 9001, int, 'Prometheus exporter port'))
 
 def addTasks(services):
 	# Create the list of tasks
@@ -103,7 +103,7 @@ def main():
 		for x in CHAINS:
 			if x.detect(conf):
 				chain = x(conf)
-				print ("Detected chain", chain.TYPE)
+				print("Detected chain", chain.TYPE)
 				services = Services(conf, notification, system, chain, persistent)
 				tasks = addTasks(services)
 				print(tasks)
