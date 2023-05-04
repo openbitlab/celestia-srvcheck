@@ -174,7 +174,7 @@ class CelestiaDas(Chain):
         if serv:
             synching = Bash(f'journalctl -u {serv} --no-pager --since "1 min ago"').value().split("\n")
             synchingBlocks =  [b for b in synching if "finished syncing headers" in b]
-        return not self.rpcCall('das.SamplingStats')['catch_up_done'] or len(synchingBlocks) > 0
+        return not self.rpcCall('das.SamplingStats')['catch_up_done'] and len(synchingBlocks) > 0
 
     def getSamplesHeight(self):
         # RPC call return inconsistent data (different from logs)
