@@ -38,12 +38,14 @@ class TaskCelestiaDasCheckSamplesHeight(Task):
                 elapsed = elapsedToString(self.since)
                 return self.notify(f'is not sampling new headers, last block sampled is {bhSampled}, current block header is {bh} ({elapsed}) {Emoji.Stuck}')
             elif abs(bh - bhSampled) > 1:
+                self.prev = bhSampled
                 return self.notify(f'is lagging in sampling new headers ({bh - bhSampled} behind) {Emoji.Slow}')
 
             if self.oc > 0:
                 elapsed = elapsedToString(self.since)
                 self.notify(f'is back sampling new headers (after {elapsed}) {Emoji.SyncOk}')
-
+            
+            self.prev = bhSampled
             self.since = time.time()
             self.oc = 0
         return False
