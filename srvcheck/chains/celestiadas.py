@@ -14,6 +14,7 @@ class TaskCelestiaDasCheckSamplesHeight(Task):
     def __init__(self, services, checkEvery=minutes(5), notifyEvery=minutes(5)):
         super().__init__('TaskCelestiaDasCheckSamplesHeight', services, checkEvery, notifyEvery)
         self.since = None
+        self.prev = None
         self.oc = 0
 
     @staticmethod
@@ -25,15 +26,19 @@ class TaskCelestiaDasCheckSamplesHeight(Task):
             bh = int(self.s.chain.getNetworkHeight())
             bhSampled = self.s.chain.getSamplesHeight()
 
+            if self.prev is None:
+                self.prev = bhSampled
+
             if self.since is None:
                 self.since = time.time()
                 return False
 
-            if bh > bhSampled:
+            if self.prev == bhSampled:
                 self.oc += 1
                 elapsed = elapsedToString(self.since)
-                return self.notify(
-                    f'is not sampling new headers, last block sampled is {bhSampled}, current block header is {bh} ({elapsed}) {Emoji.Stuck}')
+                return self.notify(f'is not sampling new headers, last block sampled is {bhSampled}, current block header is {bh} ({elapsed}) {Emoji.Stuck}')
+            elif abs(bh - bhSampled) > 1:
+                return self.notify(f'is lagging in sampling new headers ({bh - bhSampled} behind) {Emoji.Slow}')
 
             if self.oc > 0:
                 elapsed = elapsedToString(self.since)
