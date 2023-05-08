@@ -152,6 +152,20 @@ govAdmin =
 exporterPort =
 ```
 
+## Prometheus custom expoter: metrics
+Custom exporter has been developed to export metrics related to Celestia light node app with a fixed scraping fequency of 60s, specifically the following metrics are exported:
+
+| Name | Description | Type |
+|--|--|--|
+| peers_count | Number of peers connected to the node | Guage |
+| node_height | Node height | Guage |
+| network_height | Network height | Guage |
+| out_of_sync_counter | Incremental value to indicate how many times the node result in syncing state | Counter |
+| first_header | Height of the first processed header in the latest block range  | Guage |
+| latest_header | Height of the latest processed header in the latest block range | Guage |
+| finished_s | Processing time of the latest block range | Guage |
+| errors | Number of errors encountered during the processing og the latest block range | Guage |
+
 ## Credits
 
 Made with love by the [Openbitlab](https://openbitlab.com) team
