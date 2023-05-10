@@ -42,8 +42,7 @@ In order to receive alerts on Telegram, you need to create a telegram bot and se
 Start the **`@BotFather`** bot on Telegram, then type `/newbot` to create a new bot and specify name and username.<br>
 You should now have the **token**, which is required on a later step to install the monitor.<br>
 Then, open a new Telegram group, **add the created bot** to it.<br>
-You will need the chat id, and the easiest way to get it is to add `@MissRose_bot` to your group and then type **id** in the chat group.<br>
-In order to get the id you have a few options, the easiest one is to add **`@MissRose_bot`** to your group and then type `/id` in the chat group.<br>
+You will need the chat id, and the easiest way to get it is to add `@MissRose_bot` to your group and then type `/id` in the chat group.<br>
 During the installation, you will use the **id** and **token**. These parameters will be flagged respectively **<tg_chat_id>** and **<tg_token>**.
 
 
@@ -76,7 +75,7 @@ install --help
 
 #### A few examples of the installation with optional flags:
 
-Install with `--git` flag to get alerts on new node releases (in this case [celstia-node](https://github.com/celestiaorg/celestia-node))
+Install with `--git` flag to get alerts on new node releases (in this case [celestia-node](https://github.com/celestiaorg/celestia-node))
 
 ```bash 
 curl -s https://raw.githubusercontent.com/openbitlab/celestia-srvcheck/main/install.sh | bash -s -- -t <tg_chat_id> <tg_token> -s <service_name> --git celestiaorg/celestia-node
@@ -151,6 +150,20 @@ govAdmin =
 ; Prometheus exporter port
 exporterPort =
 ```
+
+## Prometheus custom exporter: metrics
+A custom exporter has been developed to export metrics related to Celestia node with a fixed scraping frequency of 15s, specifically the following metrics are exported:
+
+| Name | Description | Type |
+|--|--|--|
+| peers_count | Number of peers connected to the node | Guage |
+| node_height | Node height | Guage |
+| network_height | Network height | Guage |
+| out_of_sync_counter | Incremental value to indicate how many times the node result in syncing state | Counter |
+| first_header | Height of the first processed header in the latest block range  | Guage |
+| latest_header | Height of the latest processed header in the latest block range | Guage |
+| finished_s | Processing time of the latest block range | Guage |
+| errors | Number of errors encountered during the processing of the latest block range | Guage |
 
 ## Credits
 
