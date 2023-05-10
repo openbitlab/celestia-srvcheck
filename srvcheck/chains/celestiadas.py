@@ -71,14 +71,13 @@ class TaskExporter(Task):
         return services.chain.ROLE == 'light' or services.chain.ROLE == 'full'
 
     def run(self):
-        # self.s.chain.peer_metric.set(self.s.chain.getPeerCount())
         self.s.chain.getLastSampledHeader()
         self.exporter.export()
 
 
 class TaskNodeIsSynching(Task):
     def __init__(self, services):
-        super().__init__('TaskNodeIsSynching', services, minutes(5), minutes(5))
+        super().__init__('TaskNodeIsSynching', services, checkEvery=minutes(5), notifyEvery=minutes(5))
         self.prev = None
         self.since = None
         self.oc = 0
@@ -98,8 +97,7 @@ class TaskNodeIsSynching(Task):
         nh = int(self.s.chain.getNetworkHeight())
         if bh > self.prev and abs(bh - nh) > 100:
             self.oc += 1
-            return self.notify(
-                f'chain is synching, last block stored is {bh}, current network height is {nh} {Emoji.Slow}')
+            return self.notify(f'chain is synching, last block stored is {bh}, current network height is {nh} {Emoji.Slow}')
 
         if self.oc > 0:
             elapsed = elapsedToString(self.since)

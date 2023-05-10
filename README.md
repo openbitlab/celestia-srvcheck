@@ -152,8 +152,8 @@ govAdmin =
 exporterPort =
 ```
 
-## Prometheus custom expoter: metrics
-Custom exporter has been developed to export metrics related to Celestia light node app with a fixed scraping fequency of 60s, specifically the following metrics are exported:
+## Prometheus custom exporter: metrics
+A custom exporter has been developed to export metrics related to Celestia node with a fixed scraping frequency of 60s, specifically the following metrics are exported:
 
 | Name | Description | Type |
 |--|--|--|
@@ -164,7 +164,7 @@ Custom exporter has been developed to export metrics related to Celestia light n
 | first_header | Height of the first processed header in the latest block range  | Guage |
 | latest_header | Height of the latest processed header in the latest block range | Guage |
 | finished_s | Processing time of the latest block range | Guage |
-| errors | Number of errors encountered during the processing og the latest block range | Guage |
+| errors | Number of errors encountered during the processing of the latest block range | Guage |
 
 ## Credits
 
