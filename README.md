@@ -153,7 +153,7 @@ exporterPort =
 ```
 
 ## Prometheus custom exporter: metrics
-A custom exporter has been developed to export metrics related to Celestia node with a fixed scraping frequency of 60s, specifically the following metrics are exported:
+A custom exporter has been developed to export metrics related to Celestia node with a fixed scraping frequency of 15s, specifically the following metrics are exported:
 
 | Name | Description | Type |
 |--|--|--|
