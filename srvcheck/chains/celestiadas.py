@@ -112,6 +112,7 @@ class TaskNodeIsSynching(Task):
 class CelestiaDas(Chain):
     TYPE = ""
     ROLE = "light"
+    CHAIN_ID = "celestia"
     NAME = ""
     BLOCKTIME = 60
     AUTH_TOKEN = None
@@ -130,6 +131,9 @@ class CelestiaDas(Chain):
             self.BIN = cmd[0]
             self.ROLE = cmd[1]
             self.TYPE = self.ROLE.capitalize() + " node"
+            p2p_net_pos = cmd.index("--p2p.network") if "--p2p.network" in cmd else None
+            if p2p_net_pos:
+                self.CHAIN_ID = cmd[p2p_net_pos + 1].split("-")[0]
 
     @staticmethod
     def detect(conf):
@@ -141,7 +145,7 @@ class CelestiaDas(Chain):
 
     def rpcCall(self, method, headers=None, params=[]):
         if not self.AUTH_TOKEN:
-            self.AUTH_TOKEN = Bash(f"{self.BIN} {self.ROLE} auth admin --p2p.network blockspacerace").value()
+            self.AUTH_TOKEN = Bash(f"{self.BIN} {self.ROLE} auth admin --p2p.network {self.CHAIN_ID}").value()
         headers = {'Authorization': 'Bearer ' + self.AUTH_TOKEN}
         return super().rpcCall(method, headers, params)
 
