@@ -97,7 +97,8 @@ class TaskNodeIsSynching(Task):
         nh = int(self.s.chain.getNetworkHeight())
         if bh > self.prev and abs(bh - nh) > 100:
             self.oc += 1
-            return self.notify(f'chain is synching, last block stored is {bh}, current network height is {nh} {Emoji.Slow}')
+            perc = bh / nh * 100
+            return self.notify(f'chain is synching, last block stored is {bh}, current network height is {nh} ({perc:.2f} %) {Emoji.Slow}')
 
         if self.oc > 0:
             elapsed = elapsedToString(self.since)
