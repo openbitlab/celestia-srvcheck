@@ -135,10 +135,10 @@ class CelestiaDas(Chain):
             self.TYPE = self.ROLE.capitalize() + " node"
             p2p_net_pos = cmd.index("--p2p.network") if "--p2p.network" in cmd else None
             if p2p_net_pos:
-                self.CHAIN_ID = cmd[p2p_net_pos + 1].split("-")[0]
+                self.CHAIN_ID = cmd[p2p_net_pos + 1]
             data_custom = cmd.index("--node.store") if "--node.store" in cmd else None
             if data_custom:
-                self.DATA_FOLDER = cmd[data_custom + 1].split("-")[0]
+                self.DATA_FOLDER = cmd[data_custom + 1]
 
     @staticmethod
     def detect(conf):
