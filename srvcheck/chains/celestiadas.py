@@ -97,7 +97,8 @@ class TaskNodeIsSynching(Task):
         nh = int(self.s.chain.getNetworkHeight())
         if bh > self.prev and abs(bh - nh) > 100:
             self.oc += 1
-            return self.notify(f'chain is synching, last block stored is {bh}, current network height is {nh} {Emoji.Slow}')
+            perc = bh / nh * 100
+            return self.notify(f'chain is synching, last block stored is {bh}, current network height is {nh} ({perc:.2f} %) {Emoji.Slow}')
 
         if self.oc > 0:
             elapsed = elapsedToString(self.since)
@@ -117,6 +118,7 @@ class CelestiaDas(Chain):
     BLOCKTIME = 60
     AUTH_TOKEN = None
     BIN = None
+    DATA_FOLDER = None
     EP = "http://localhost:26658/"
     CUSTOM_TASKS = [TaskCelestiaDasCheckSamplesHeight, TaskNodeIsSynching, TaskExporter]
     LATEST_SAMPLED_HEADERS = {}
@@ -133,7 +135,10 @@ class CelestiaDas(Chain):
             self.TYPE = self.ROLE.capitalize() + " node"
             p2p_net_pos = cmd.index("--p2p.network") if "--p2p.network" in cmd else None
             if p2p_net_pos:
-                self.CHAIN_ID = cmd[p2p_net_pos + 1].split("-")[0]
+                self.CHAIN_ID = cmd[p2p_net_pos + 1]
+            data_custom = cmd.index("--node.store") if "--node.store" in cmd else None
+            if data_custom:
+                self.DATA_FOLDER = cmd[data_custom + 1]
 
     @staticmethod
     def detect(conf):
@@ -145,7 +150,10 @@ class CelestiaDas(Chain):
 
     def rpcCall(self, method, headers=None, params=[]):
         if not self.AUTH_TOKEN:
-            self.AUTH_TOKEN = Bash(f"{self.BIN} {self.ROLE} auth admin --p2p.network {self.CHAIN_ID}").value()
+            cmd = f"{self.BIN} {self.ROLE} auth admin --p2p.network {self.CHAIN_ID}"
+            if self.DATA_FOLDER:
+                cmd = f"{cmd} --node.store {self.DATA_FOLDER}"
+            self.AUTH_TOKEN = Bash(cmd).value()
         headers = {'Authorization': 'Bearer ' + self.AUTH_TOKEN}
         return super().rpcCall(method, headers, params)
 
