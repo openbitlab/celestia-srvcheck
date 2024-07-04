@@ -27,7 +27,7 @@ class TelegramNotification(NotificationProvider):
 			os.system('curl -F photo=@"./%s" https://api.telegram.org/bot%s/sendPhoto?chat_id=%s' % (photo, self.apiToken, ci))
 
 	def send(self, st):
-		print(st.encode('utf-8'))
+		print(st.encode('utf-8', 'ignore'))
 		for x in self.chatIds:
 			requests.get(f'https://api.telegram.org/bot{self.apiToken}/sendMessage?text={st}&chat_id={x}').json()
 

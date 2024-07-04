@@ -82,7 +82,7 @@ def main():
 		if conf.exists(f'notification.{x}.enabled') and conf.getOrDefault(f'notification.{x}.enabled', False):
 			notification.addProvider (v(conf))
 
-	print(f"starting monitor v{version} {Emoji.Start}")
+	print(f"starting monitor v{version}")
 	system = System(conf)
 	print (system.getUsage())
 
